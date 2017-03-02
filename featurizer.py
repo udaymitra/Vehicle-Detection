@@ -18,16 +18,18 @@ def color_hist(img, nbins=32, bins_range=(0, 256)):
     hist_features = np.concatenate((channel1_hist[0], channel2_hist[0], channel3_hist[0]))
     return hist_features
 
-def get_feature_vector(img, spatial=32, histbins=32):
+def get_feature_vector(img, spatial=32, histbins=32,
+                       orientations=8, pixels_per_cell=4, cells_per_block=2, transform_sqrt=True):
     hsv = convert_color_space(img, color_space='HSV')
 
-    color_features = bin_spatial(hsv, size=(spatial, spatial))
-    color_hist_features = color_hist(img, nbins=histbins)
+    # color_features = bin_spatial(hsv, size=(spatial, spatial))
+    # color_hist_features = color_hist(img, nbins=histbins)
 
-    # s_channel = get_channel(hsv, 1)
-    # hog_fv = get_hog_features(s_channel, orientations=8, pixels_per_cell=4, cells_per_block=2, transform_sqrt=True, visualise=False)
+    s_channel = get_channel(hsv, 1)
+    hog_fv = get_hog_features(s_channel, orientations=orientations, pixels_per_cell=pixels_per_cell,
+                              cells_per_block=cells_per_block, transform_sqrt=transform_sqrt, visualise=False)
 
     # combine all features
     # fv = np.concatenate((color_features, color_hist_features, hog_fv))
-    fv = np.concatenate((color_features, color_hist_features))
+    fv = hog_fv
     return fv

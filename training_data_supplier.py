@@ -6,7 +6,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.cross_validation import train_test_split
 import time
 
-def get_train_test_data(spatial=32, histbins=32):
+def get_train_test_data(spatial=32, histbins=32, orientations=8, pixels_per_cell=4,
+                        cells_per_block=2, transform_sqrt=True):
     start_time = time.time()
 
     vehicle_paths = glob.glob('../vehicle_detection_data/vehicles/*/*.png')
@@ -17,17 +18,17 @@ def get_train_test_data(spatial=32, histbins=32):
 
     for vehicle_path in vehicle_paths:
         img = read_image_as_rgb(vehicle_path)
-        car_features.append(get_feature_vector(img, spatial=spatial, histbins=histbins))
+        car_features.append(get_feature_vector(img, spatial, histbins, orientations, pixels_per_cell, cells_per_block, transform_sqrt))
 
         flipped_image = flip_image(img)
-        car_features.append(get_feature_vector(flipped_image, spatial=spatial, histbins=histbins))
+        car_features.append(get_feature_vector(flipped_image, spatial, histbins, orientations, pixels_per_cell, cells_per_block, transform_sqrt))
 
     for vehicle_path in non_vehicle_paths:
         img = read_image_as_rgb(vehicle_path)
-        notcar_features.append(get_feature_vector(img, spatial=spatial, histbins=histbins))
+        notcar_features.append(get_feature_vector(img, spatial, histbins, orientations, pixels_per_cell, cells_per_block, transform_sqrt))
 
         flipped_image = flip_image(img)
-        notcar_features.append(get_feature_vector(flipped_image, spatial=spatial, histbins=histbins))
+        notcar_features.append(get_feature_vector(flipped_image, spatial, histbins, orientations, pixels_per_cell, cells_per_block, transform_sqrt))
 
     print("Num examples for cars: ", len(car_features))
     print("Num examples for non cars: ", len(notcar_features))
